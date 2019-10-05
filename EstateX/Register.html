@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>REGISTER</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js">
+	</script>
+	
+	<script src="register.js">
+		
+	</script>	
+	
+	<link rel="stylesheet" href="register.css">
+	
+	</head>
+	<body>
+	<div class="navbar">
+                  <a href="index.html">HOME</a>
+					<a href="Explore.html">EXPLORE</a>
+                    <a href="aboutUs.html">ABOUT US</a>
+                    <a href="feedback_form.html">FEEDBACK</a>
+					<a href="Login.html">LOGIN</a>
+					<a href="Register.html">REGISTER</a>
+					
+				</div>
+		
+
+					
+					<form   method="post" class="modal-content animate"  name=Registration_form  action="LogIn.html">
+				  
+					
+							<div class="container">
+							<div class="vl">
+				
+					
+							<label for="fname"><b>First Name</b></label>
+							<input type="text" name="fname" id="fname" placeholder="Enter Your FirstName" required />
+							<label class="error" for="fname" id="fnameFLetter_error">*User FirstName must begin with a letter<br></label>
+							<label class="error" for="fname" id="fnameSpChar_error">*User FirstName should only contain letters <br></label>
+							
+							<label for="lname"><b>Last Name</b></label>
+							<input type="text" name="lname" id="lname" placeholder="Enter Your LastName" required />
+							<label class="error" for="lname" id="lnameFLetter_error">*User LastName must begin with a letter<br></label>
+							<label class="error" for="lname" id="lnameSpChar_error">*User LastName should only contain letters<br></label>
+							
+							<label for="email"><b>Email</b></label>
+							<input type="text" name="email" id="email" placeholder="Enter Your Email Address" required />
+													
+							
+							<label for="pnumber"><b>Phone Number</b></label>
+							<input type="text" placeholder="Enter Your Phone Number" name="pnumber" id="pnumber" required />
+							<label class="error" for="pnumber" id="pnumber_spChar_error">*PhoneNumbershould not have one ! or * in it<br></label>
+							
+							<label for="Address"><b>Address</b></label>
+							<input type="text" name="Address" id="Address" placeholder="Enter Your Address" required />
+							<label class="error" for="Address" id="addressemthy_error">*Address must be filled <br></label>
+							
+							<label for="psw">Password <br></label>
+							<input name="password" id="psw" type="password" onkeyup='check();' />
+							<label class="error" for="psw" id="addressemthy_error">Complete the requirments <br></label>
+							
+							<label for="cpsw"> Confirm password </label> 
+							<input type="password" name="confirm_password" id="cpsw"  onkeyup='check();' required />  <span id='message'></span>
+							
+							
+						
+							
+							
+	  
+							<button class="button" value="submit" type="submit">Register</button>
+							<h3>Requirements</h3>
+							<p>User name must begin with a letter and should only contain numbers and letters.
+							<br> Password should be 8 to 16 characters long with atleast one digit.
+							<br>Password should also have one ! or * in it and should begin with a letter.</p>
+							
+							</div>
+		
+						</div>
+
+				  </form>
+				  
+		
+	</body>
+	<footer style="padding:10px;background-color: black;color:white; ">
+		 <h4>   &copy;  Harshit Walia (N01264442), Sahil Sahil (N01273291)</h4>
+	</footer>
+</html>

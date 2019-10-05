@@ -1,0 +1,256 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <sys/times.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <wordexp.h>
+#include <signal.h>
+
+long double doCalc()
+{
+    long double sumNum=0;
+    int i,j,k;
+    for(i=1;i<20;i++)
+    {  
+	for(j=1;j<1000;j++)
+	{   
+	    for(int k=1;k<25;k++) 
+            {
+              chmod("newHellofile.c",0666); 
+              }
+  
+           sumNum+=sqrt(sqrt(sqrt(sqrt((double)5000000000000))));       
+	}
+     usleep(10000); 
+    }
+    return sumNum;
+}
+
+
+//shows the history made in the current shell
+int ShowHistory(char *hist[], int current)
+{
+	int i = current;
+	int num=1;
+
+	do
+	{
+		if(hist[i])
+		{
+			fprintf(stdout,"%4d %s\n",num,hist[i]);
+			num++;
+		}
+		
+		i = (i+1) % 1000;
+	}while(i != current);
+
+	return 0;
+
+}
+
+int main(char * argv[])
+{
+	char *hist[1000];
+	char * temp[1000];
+        int current = 0;
+	int status;
+	FILE *fp;
+	char cmd[1000];
+	char compile[1000];
+	char cmd2[1000];
+	char* EnvVar = getenv("HOME");
+	wordexp_t expansionList;
+	int result;
+	struct timeval before,after,difference;
+	struct tms processingTime;
+	int i,j;
+
+	gettimeofday(&before,NULL);
+
+	for(i=0;i<1000;i++)
+	{hist[i]=NULL;}
+
+	while(1)
+  	{
+		fprintf(stdout,"%s@shell ->",getenv("USER"));
+		fgets(cmd,sizeof(cmd),stdin);
+		cmd[strlen(cmd)-1]='\0';
+		if(feof(stdin)) break;
+	
+		result=wordexp(cmd,&expansionList, WRDE_SHOWERR);
+
+		hist[current] = strdup(cmd); //stores the command for displaying when history is called;
+		current = (current+1) % 1000;
+
+		//I was not able to as mentioned in the 
+		//assignment but what I did is took a null("") 
+		//char after the '!' and took the following string as argument
+		if(strcmp(expansionList.we_wordv[0],"!")==0)
+		{
+			strcpy(cmd,hist[atoi(expansionList.we_wordv[1])-1]);
+			result=wordexp(cmd,&expansionList, WRDE_SHOWERR);
+		}
+
+		//Check if the line is a comment
+		if(cmd[0]=='#') continue;
+		
+		if((strcmp(expansionList.we_wordv[0],"hi")==0))
+               	{
+			fprintf(stdout,"%s\n",expansionList.we_wordv[0]);
+			fprintf(stdout,"Hi %s  hows it goin\n",getenv("USER"));
+                	continue;
+                }
+		//Checks for the command 'cd'
+		if((strcmp(expansionList.we_wordv[0],"cd")==0))
+               	{
+			int ret;
+			if(expansionList.we_wordv[1]==NULL)
+			{
+				ret = chdir(EnvVar);
+				strcpy(cmd,"pwd");
+				continue;
+			}
+			if(strcmp(expansionList.we_wordv[1],"-")==0)
+			{
+				ret = chdir("..");
+				strcpy(cmd,"pdw");
+				continue;
+			}
+			ret = chdir(expansionList.we_wordv[1]);
+			strcpy(cmd,"pwd");
+                	continue;
+		}
+		
+		//checks history and its features
+		if((strcmp(expansionList.we_wordv[0],"history")==0))
+               	{
+
+			if(expansionList.we_wordc>1)
+			{
+				i = current - atoi(expansionList.we_wordv[1]);
+				
+				while(i!=current)
+				{
+					fprintf(stdout,"%4d %s\n",i+1,hist[i]);
+					i++;
+				}
+				continue;
+			}
+			else
+			{
+				ShowHistory(hist,current);
+				continue;
+			}
+			continue;
+		}
+
+		if(strcmp(expansionList.we_wordv[0],"umask") == 0)
+    		{
+       			if(strlen(expansionList.we_wordv[0]) >= 5)
+       			{
+         			int result = 0;
+         			sscanf(expansionList.we_wordv[1],"%o",&result);
+         			umask(result);  
+       			}
+    		}
+
+		if(strcmp(expansionList.we_wordv[0],"TIME") == 0)
+		{
+		        gettimeofday(&after,NULL);
+		        times(&processingTime);
+               
+		        difference.tv_sec=after.tv_sec-before.tv_sec;
+		        fprintf(stdout,"\nTime elapsed since shell started: %ld seconds",difference.tv_sec);
+		        fprintf(stdout,"\nUser time of children: %lf seconds",(double)processingTime.tms_cutime/100.0);
+		  	fprintf(stdout,"\nSystem time of children: %lf seconds\n",(double)processingTime.tms_cstime/100.0);
+    		}
+
+
+		//Compiling function
+		if(expansionList.we_wordv[0][strlen(expansionList.we_wordv[0])-1]=='c'&&expansionList.we_wordv[0][strlen(expansionList.we_wordv[0])-2]=='.')
+		{
+			for(i=0;i<strlen(expansionList.we_wordv[0])-2;i++)
+			{
+				cmd2[i] = cmd[i];
+			}	
+
+			sprintf(compile,"gcc -g -std=gnu99 -Wformat %s -o %s",cmd,cmd2);
+			fprintf(stdout,"Compiling: %s\n",compile);
+			system(compile);
+			continue;
+		}
+		if(strcmp(expansionList.we_wordv[0],"a.out")==0)
+		{
+			system(cmd2);
+		}
+
+		//Save History feature; what we do over here is open a filw in write mode to write the cmd in the file.
+		if(strcmp(expansionList.we_wordv[0],"saveHistory")==0)
+		{
+			fp = fopen("MyHist","w");
+			fprintf(fp,"#!./forkingshell\n");
+			for(i=1;i<=current-2;i++)
+			{
+				fprintf(fp,"%4d %s\n",i,hist[i]);
+			}
+			fclose(fp);
+			chmod("MyHist",S_IRWXU);
+			continue;
+		}
+
+		if(strcmp(expansionList.we_wordv[0],"forkshell") == 0)
+  		{
+		      char get_exe_cmd[100],save_cmd[20];
+		      int cnt = 0;
+		      fp = fopen(expansionList.we_wordv[0],"r");
+		      if(fp == NULL){ perror("fp"); }
+     
+		      while(!feof(fp))
+		      {
+			         fgets(get_exe_cmd,100,fp);
+			         if(strcmp(get_exe_cmd,"#!./forkingshell") != 0)
+			         {
+			              for(int i=0; i < strlen(get_exe_cmd);i++)
+					{
+                   				if(get_exe_cmd[i] == '#'){ break; }
+				                   save_cmd[i] = get_exe_cmd[i];
+					}
+		      system( save_cmd );
+               	      int CNT = 0;
+               	      while(save_cmd[CNT] != '\0'){ save_cmd[CNT] = '\0'; CNT++; }
+           			}
+         		}
+      		fclose(fp);	
+  		}
+
+
+     		if(strcmp(expansionList.we_wordv[0],"exit")==0) 
+        	exit( expansionList.we_wordc>1 ?
+              	atoi(expansionList.we_wordv[1]): 0);
+
+		switch(fork())
+		{
+			case 0:  //We are in the child
+			execvp(expansionList.we_wordv[0],expansionList.we_wordv);
+			return -1; //Failed to exec
+
+			case -1:  perror("Failed to fork");
+             		break;
+
+       			default: 
+               		wait(&status); 
+               		wordfree(&expansionList);
+
+      		}
+     		fprintf(stdout,"Status of command is: %d\n",status>>8);   
+	}
+	return 0;
+
+}

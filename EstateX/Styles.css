@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Log in</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js">
+	</script>
+	
+	<script src="Login.js">
+		
+	</script>	
+	
+	<link rel="stylesheet" href="Login.css">
+	
+	</head>
+	<body>
+	<div class="navbar">
+                  <a href="index.html">HOME</a>
+					<a href="Explore.html">EXPLORE</a>
+                    <a href="aboutUs.html">ABOUT US</a>
+                    <a href="feedback_form.html">FEEDBACK</a>
+					<a href="Login.html">LOGIN</a>
+					
+				</div>
+		
+
+					
+					
+				  <form  class="modal-content animate"  name=logIn_form action="afterLogIn.html">
+					
+							<div class="container">
+							<div class="vl">
+				
+					
+							<label for="uname"><b>Username</b></label>
+							<input type="text" name="uname" id="uname" placeholder="Enter Username" />
+							<label class="error" for="uname" id="usernameFLetter_error">*User name must begin with a letter<br></label>
+							<label class="error" for="uname" id="usernameSpChar_error">*User name should only contain letters and numbers<br></label>
+	  
+
+							<label for="psw"><b>Password</b></label>
+							<input type="password" placeholder="Enter Password" name="psw" id="psw" >
+							<label class="error" for="psw" id="psw_length_error">*Password should be 8 to 16 characters long<br></label>
+							<label class="error" for="psw" id="psw_number_error">*Password should have atleast 1 digit<br></label>
+							<label class="error" for="psw" id="psw_spChar_error">*Password should have one ! or * in it<br></label>
+							<label class="error" for="psw" id="psw_FLetter_error">*Password should begin with a letter<br></label>
+	  
+							<button class="button" type="submit">Sign In</button>
+							<h3>Requirements</h3>
+							<p>User name must begin with a letter and should only contain numbers and letters.
+							<br> Password should be 8 to 16 characters long with atleast one digit.
+							<br>Password should also have one ! or * in it and should begin with a letter.</p>
+							
+							</div>
+		
+						</div>
+
+				  </form>
+				  
+		
+	</body>
+	<footer style="padding:10px;background-color: black;color:white; ">
+		 <h4>   &copy;  Harshit Walia (N01264442), Sahil Sahil (N01273291)</h4>
+	</footer>
+</html>
